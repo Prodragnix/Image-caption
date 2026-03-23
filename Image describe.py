@@ -32,7 +32,7 @@ def extract_error(r:requests.Response)->str:
 def box(title:str,lines:list[str],icon:str):
     w=max(30,len(title)+4,*(len(x) for x in lines))
     print("\n" + "┏" + "━" * (w + 2) + "┓")
-    print(f"┃ {icon} {title.ljust(w - 2)} ┃")
+    print(f"┃{icon} {title.ljust(w - 2)}┃")
     print("┣" + "━" * (w + 2) + "┫")
     for x in lines:
         print(f"┃ {x.ljust(w)} ┃")
@@ -44,8 +44,8 @@ def caption_single():
         with open(image_source,'rb') as f:
             img=f.read()
     except Exception:
-        box('FILE ERROR')
-        return
+        box('FILE ERROR',['There is a file error!','Make sure path is correct!'],':-(')
+        caption_single()
     base={
         'messages':[{
             'role':'user','content':[
@@ -69,4 +69,10 @@ def caption_single():
             return
         last='No caption found'
     box('Caption Failed',[f'Image:{image_source}',f'ERROR : {last or 'Unknown Error'}'],':-(')
+    redo=input('Do you want to check another picture? (y/n)')
+    if redo == 'y' or redo=='yes':
+        caption_single()
+    else:
+        print('BYE!')
+        exit()
 caption_single()
